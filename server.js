@@ -40,7 +40,11 @@ app.use('/uploads', express.static('uploads'))
 
 const PORT = process.env.PORT || 3000;
 
-
+app.get('/',(req,res)=>{
+   res.json({message:
+      "hello there"
+   });
+})
 app.use('/api', AuthRoute);
 app.use('/api/shoes',ShoesRoute);
 app.use('/api/watches', watchRoutes);
