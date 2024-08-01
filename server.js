@@ -12,10 +12,11 @@ dotenv.config();
 const bodyParser = require('body-parser');
 const AuthRoute  = require('./routes/auth') 
 const ShoesRoute  = require('./routes/shoes') 
+
 const watchRoutes = require('./routes/watch')
 const reclamationRoutes = require('./routes/reclamation')
 const commandeRoute  = require('./routes/commande') 
-
+const categoryRoutes = require('./routes/categoryRoutes');
 mongoose.connect(process.env.database_uri);
 
 
@@ -47,6 +48,7 @@ app.get('/',(req,res)=>{
 })
 app.use('/api', AuthRoute);
 app.use('/api/shoes',ShoesRoute);
+app.use('/api', categoryRoutes);
 app.use('/api/watches', watchRoutes);
 app.use('/api/reclamation',reclamationRoutes);
 app.use('/api/commandes', commandeRoute);

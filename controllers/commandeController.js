@@ -140,3 +140,17 @@ exports.deleteCommande = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.updateCommandeStatus = async (req, res) => {
+    try {
+      const updatedCommande = await Commande.findByIdAndUpdate(
+        req.params.id,
+        { status: 'confirmed' },
+        { new: true }
+      );
+      if (!updatedCommande) return res.status(404).json({ message: 'Commande not found' });
+      res.status(200).json(updatedCommande);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };

@@ -155,12 +155,17 @@ const securePassword = async(password)=> {
         res.status(400).send(error.message);
     }
 }
-
+const logout = (req, res) => {
+    // To simulate logout, just return a success message
+    res.status(200).json({
+        message: 'Logout Successful!',
+    });
+};
 
 
 ////////////////////////
 
 module.exports = {
     register,
-    login,forgetpassword,reset_password,
+    login,forgetpassword,reset_password,logout,
 };

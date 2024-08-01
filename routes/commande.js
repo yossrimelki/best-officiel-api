@@ -7,5 +7,6 @@ router.get('/:id', commandeController.getCommandeById);
 router.post('/', commandeController.createCommande);
 router.put('/:id', commandeController.updateCommande);
 router.delete('/:id', commandeController.deleteCommande);
+router.put('/:id/status', commandeController.updateCommandeStatus);
 
 module.exports = router;

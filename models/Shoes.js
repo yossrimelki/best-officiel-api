@@ -33,6 +33,11 @@ const shoesSchema = new Schema({
   shadow: {
     type: String,
     required: true
+  },
+  solde: {
+    type: Number,
+    required: true,
+    default:0
   }
 }, { timestamps: true });
 

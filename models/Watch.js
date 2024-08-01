@@ -11,15 +11,14 @@ const watchSchema = new Schema({
     required: true
   },
   img: {
-    type: String,
-    required: true
+    type: String
   },
   price: {
     type: Number,
     required: true
   },
   rating: {
-    type: Number, // Changed to String to accommodate "5+"
+    type: Number,
     required: true
   },
   color: {
@@ -29,6 +28,20 @@ const watchSchema = new Schema({
   shadow: {
     type: String,
     required: true
+  },
+  subCategory: {
+    type: Schema.Types.ObjectId,
+    ref: 'SubCategory',
+    required: true
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
+  },
+  solde: {
+    type: Number,
+    required: false
   }
 }, { timestamps: true });
 
