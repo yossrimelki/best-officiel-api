@@ -69,13 +69,20 @@ exports.updateCategory = async (req, res) => {
 // Delete category
 exports.deleteCategory = async (req, res) => {
   try {
-    const deletedCategory = await Category.findByIdAndDelete(req.params.id);
-    if (!deletedCategory) {
+    const category = await Category.findById(req.params.id);
+    if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
-    res.status(200).json({ message: 'Category deleted' });
+
+    // Delete all subcategories associated with this category
+    await SubCategory.deleteMany({ _id: { $in: category.subCategories } });
+
+    // Delete the category
+    await Category.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: 'Category and its subcategories deleted' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting category' });
+    res.status(500).json({ message: 'Error deleting category and subcategories', error });
   }
 };
 
