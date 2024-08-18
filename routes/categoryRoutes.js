@@ -6,8 +6,8 @@ const upload = require('../middleware/upload');
 // Categories
 router.get('/categories', categoryController.getAllCategories);
 router.get('/categories/:id', categoryController.getCategoryById);
-router.post('/categories', upload.single('image'), categoryController.createCategory);
-router.put('/categories/:id', upload.single('image'), categoryController.updateCategory);
+router.post('/categories', categoryController.createCategory);
+router.put('/categories/:id', categoryController.updateCategory);
 router.delete('/categories/:id', categoryController.deleteCategory);
 
 // Sub-Categories

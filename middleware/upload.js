@@ -1,8 +1,8 @@
+// middleware/upload.js
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure the uploads directory exists
 const uploadsDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({
+const uploadMiddleware = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -26,10 +26,14 @@ const upload = multer({
       console.log('Only JPEG and PNG files are supported!');
       callback(null, false);
     }
-  },
-  limits: {
-    fileSize: 1024 * 1024 * 2 // 2MB limit
   }
 });
 
-module.exports = upload;
+// Handle multiple fields
+const uploadFields = (fields) => {
+  return (req, res, next) => {
+    uploadMiddleware.fields(fields)(req, res, next);
+  };
+};
+
+module.exports = uploadFields;

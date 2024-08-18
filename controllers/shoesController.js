@@ -1,5 +1,4 @@
 const Shoes = require('../models/Shoes');
-const path = require('path');
 
 // Get all shoes
 exports.getAllShoes = async (req, res) => {
@@ -21,16 +20,17 @@ exports.getShoeById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // Create a new shoe
 exports.createShoe = async (req, res) => {
-  const imgPath = req.file ? `/uploads/${req.file.filename}` : '';
+  const imgPaths = (req.files && Object.values(req.files).flat().map(file => `/uploads/${file.filename}`)) || [];
 
   const shoe = new Shoes({
     title: req.body.title,
     text: req.body.text,
-    img: imgPath,
+    img: imgPaths,
     price: parseFloat(req.body.price),
-    sizes: req.body.sizes.split(',').map(size => size.trim()),
+    sizes: req.body.sizes.split(',').map(size => parseFloat(size.trim())),
     rating: parseFloat(req.body.rating),
     color: req.body.color,
     shadow: req.body.shadow,
@@ -52,15 +52,14 @@ exports.updateShoe = async (req, res) => {
 
     if (!updatedShoe) return res.status(404).json({ message: 'Shoe not found' });
 
-    if (req.file) {
-      const filePath = path.basename(req.file.path); // Get the filename
-      updatedShoe.img = `/uploads/${filePath}`;
+    if (req.files) {
+      updatedShoe.img = Object.values(req.files).flat().map(file => `/uploads/${file.filename}`);
     }
 
     if (req.body.title) updatedShoe.title = req.body.title;
     if (req.body.text) updatedShoe.text = req.body.text;
     if (req.body.price) updatedShoe.price = parseFloat(req.body.price);
-    if (req.body.sizes) updatedShoe.sizes = req.body.sizes.split(',').map(size => size.trim());
+    if (req.body.sizes) updatedShoe.sizes = req.body.sizes.split(',').map(size => parseFloat(size.trim()));
     if (req.body.rating) updatedShoe.rating = parseFloat(req.body.rating);
     if (req.body.color) updatedShoe.color = req.body.color;
     if (req.body.shadow) updatedShoe.shadow = req.body.shadow;
@@ -72,6 +71,7 @@ exports.updateShoe = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 // Delete a shoe
 exports.deleteShoe = async (req, res) => {
   try {

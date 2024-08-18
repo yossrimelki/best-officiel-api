@@ -1,13 +1,21 @@
+// routes/watches.js
 const express = require('express');
 const router = express.Router();
 const watchController = require('../controllers/watchController');
 const upload = require('../middleware/upload');
 
+// Define upload fields
+const uploadFields = [
+  { name: 'img0', maxCount: 1 },
+  { name: 'img1', maxCount: 1 },
+  { name: 'img2', maxCount: 1 }
+];
+
 // Define routes with middleware and controller methods
 router.get('/', watchController.getAllWatches);
 router.get('/:id', watchController.getWatchById);
-router.post('/', upload.single('img'), watchController.createWatch); // Ensure 'img' matches the form field name
-router.put('/:id', upload.single('img'), watchController.updateWatch); // Ensure 'img' matches the form field name
+router.post('/', upload(uploadFields), watchController.createWatch);
+router.put('/:id', upload(uploadFields), watchController.updateWatch);
 router.delete('/:id', watchController.deleteWatch);
 
 // Additional routes

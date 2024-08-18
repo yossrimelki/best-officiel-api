@@ -1,8 +1,8 @@
+// controllers/watchController.js
 const mongoose = require('mongoose');
 const Watch = require('../models/Watch');
 const SubCategory = require('../models/SubCategory');
 const Category = require('../models/Category');
-const path = require('path');
 
 // Get all watches
 exports.getAllWatches = async (req, res) => {
@@ -28,13 +28,9 @@ exports.getWatchById = async (req, res) => {
 // Create a new watch
 exports.createWatch = async (req, res) => {
   try {
-    const { title, text, price, rating, color, shadow, subCategory, solde, category } = req.body;
-    const img = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const { title, text, price, rating, color, shadow, subCategory, category, solde } = req.body;
 
-    // Validate the category field
-    if (!mongoose.Types.ObjectId.isValid(category)) {
-      return res.status(400).json({ error: 'Invalid category ID' });
-    }
+    const img = (req.files && Object.values(req.files).flat().map(file => `/uploads/${file.filename}`)) || [];
 
     const newWatch = new Watch({
       title,
@@ -44,32 +40,46 @@ exports.createWatch = async (req, res) => {
       color,
       shadow,
       subCategory,
-      solde,
       category,
+      solde,
       img
     });
 
     await newWatch.save();
     res.status(201).json(newWatch);
   } catch (error) {
-    console.error('Error creating watch:', error);
-    res.status(500).json({ error: 'Failed to create watch' });
+    console.error('Failed to create watch:', error.message);
+    console.error('Stack trace:', error.stack);
+    res.status(500).json({ message: 'Failed to create watch', error: error.message });
   }
 };
 
-// Update a watch
+// Update an existing watch
 exports.updateWatch = async (req, res) => {
   try {
-    const updatedFields = req.body;
-    if (req.file) {
-      updatedFields.img = `/uploads/${req.file.filename}`;
-    }
+    const { id } = req.params;
+    const { title, text, price, rating, color, shadow, subCategory, category, solde } = req.body;
 
-    const updatedWatch = await Watch.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
+    const img =(req.files && Object.values(req.files).flat().map(file => `/uploads/${file.filename}`)) || [];
+
+    const updatedWatch = await Watch.findByIdAndUpdate(id, {
+      title,
+      text,
+      price,
+      rating,
+      color,
+      shadow,
+      subCategory,
+      category,
+      solde,
+      img
+    }, { new: true });
+
     if (!updatedWatch) return res.status(404).json({ message: 'Watch not found' });
     res.status(200).json(updatedWatch);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Failed to update watch:', error.message);
+    res.status(500).json({ message: 'Failed to update watch', error: error.message });
   }
 };
 

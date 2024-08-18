@@ -5,7 +5,7 @@ const AuthController = require('../controllers/AuthController');
 const upload = require('../middleware/upload');
 const authenticate = require('../middleware/authenticate'); // Add authentication middleware
 
-router.post('/register', upload.single('img'), AuthController.register);
+router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
 router.post('/forget-password', AuthController.forgetpassword);
 router.get('/reset-password', AuthController.reset_password);

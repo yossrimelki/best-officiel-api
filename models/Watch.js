@@ -11,7 +11,8 @@ const watchSchema = new Schema({
     required: true
   },
   img: {
-    type: String
+    type: [String], // Array of image URLs
+    required: false
   },
   price: {
     type: Number,

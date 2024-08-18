@@ -11,7 +11,7 @@ const shoesSchema = new Schema({
     required: true
   },
   img: {
-    type: String, // Store the image path
+    type: [String], // Store an array of image paths
     required: true
   },
   price: {
